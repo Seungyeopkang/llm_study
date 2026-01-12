@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, BitsAndBytesConfig
 import gc
-
+### bitAnyBytesConfig : 양자화 설정 도구
 def get_vram_usage():
     return torch.cuda.memory_allocated() / (1024 ** 2)
 
@@ -11,6 +11,9 @@ def load_and_measure(model_id, load_type):
     gc.collect()
     before_mem = get_vram_usage()
     
+
+    ###load_in_8bit=True : 8비트 양자화
+    ###load_in_4bit=True : 4비트 양자화
     if load_type == "FP16 (Half)":
         model = AutoModelForCausalLM.from_pretrained(
             model_id, 
@@ -40,7 +43,7 @@ def load_and_measure(model_id, load_type):
     
     del model
     torch.cuda.empty_cache()
-    gc.collect()
+    gc.collect() ## 가비지콜렉터 제거
 
 def main():
     if not torch.cuda.is_available():
