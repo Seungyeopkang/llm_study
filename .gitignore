@@ -4,6 +4,7 @@ LLM_Study_Plan.md
 # Output and Data
 day11_output/
 day12_output/
+day13_output/
 checkpoint-*/
 *.jsonl
 *.jsonl.gz
