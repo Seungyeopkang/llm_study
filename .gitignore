@@ -1,2 +1,21 @@
 LLM_Study_Instructions.md
 LLM_Study_Plan.md
+
+# Output and Data
+day11_output/
+day12_output/
+checkpoint-*/
+*.jsonl
+*.jsonl.gz
+*.bin
+*.pt
+*.safetensors
+
+# Logs and Python
+*.log
+logs/
+__pycache__/
+.ipynb_checkpoints/
+
+.agent
+
