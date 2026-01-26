@@ -6,6 +6,7 @@ day11_output/
 day12_output/
 day13_output/
 day15_output/
+day17_output/
 checkpoint-*/
 *.jsonl
 *.jsonl.gz
