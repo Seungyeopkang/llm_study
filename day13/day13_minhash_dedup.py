@@ -26,6 +26,17 @@ from datatrove.pipeline.dedup import MinhashConfig #MinHash 및 LSH(Locality Sen
 from datatrove.pipeline.writers.jsonl import JsonlWriter #json으로 출력
 import os
 
+"""
+1. n gram을 선택해서 그걸로 나눔
+2. MinHashing를 통해서 각 독립 시행으로 가장 작은 해시값을 구함 (160번 각각의 기준으로 뽑음, 가장 낮은 점수의 조각 ID를 기록)
+3. 바구니에 담음 (걍 순서대로 넣음)
+4. 클러스터링 : 같은 바구니에 하나라도 같은 해시값이 있으면 클러스터링 (묶기)
+5. 가장 빠른 id만 남기고 나머지 삭제
+
+"""
+
+
+
 def main():
     
     dataset_name = "HuggingFaceTB/smollm-corpus"
@@ -60,6 +71,7 @@ def main():
             text_key="text",
             id_key="id"
         ),
+        #n gram으로 쪼개서 해시값 생성
         MinhashDedupSignature(
             output_folder=signature_folder,
             config=minhash_config
@@ -67,6 +79,7 @@ def main():
     ]
 
     # STAGE 2 : Buckets
+    # 해시값을 bucket으로 분할
     pipeline_2 = [
         MinhashDedupBuckets(
             input_folder=signature_folder,
@@ -76,6 +89,7 @@ def main():
     ]
 
     # STAGE 3 : Cluster
+    # bucket 내의 문서들을 클러스터링
     pipeline_3 = [
         MinhashDedupCluster(
             input_folder=buckets_folder,
@@ -85,6 +99,7 @@ def main():
     ]
     
     # STAGE 4 : Filter
+    # 클러스터링된 문서들을 필터링
     pipeline_4 = [
         HuggingFaceDatasetReader(
             dataset=dataset_name,
