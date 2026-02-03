@@ -13,7 +13,8 @@ checkpoint-*/
 *.bin
 *.pt
 *.safetensors
-
+day20_output/
+*.txt
 # Logs and Python
 *.log
 logs/
